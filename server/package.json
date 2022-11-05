@@ -1,4 +1,13 @@
 {
+  "name": "server",
+  "version": "1.0.0",
+  "description": "Server for password manager",
+  "main": "index.js",
+  "author": {
+    "name": "Loadingthedev",
+    "email": "loadingthedev@gmail.com"
+  },
+  "license": "MIT",
   "scripts": {
     "dev": "tsnd --respawn --transpile-only src/main.ts"
   },
