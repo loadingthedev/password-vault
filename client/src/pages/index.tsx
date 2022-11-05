@@ -16,7 +16,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
+      <main className="flex h-screen items-center justify-center">
         {step === "login" && <LoginForm />}
         {step === "register" && <RegisterForm />}
         {step === "vault" && <Vault />}
