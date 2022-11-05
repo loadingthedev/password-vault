@@ -5,6 +5,8 @@ import cors from "@fastify/cors";
 import { CORS_ORIGIN } from "../constant";
 import jwt from "@fastify/jwt";
 import cookie from "@fastify/cookie";
+import userRoutes from "../modules/user/user.route";
+import vaultRoutes from "../modules/vault/vault.route";
 
 async function createServer() {
   const app = fastify();
@@ -17,10 +19,10 @@ async function createServer() {
   app.register(jwt, {
     secret: {
       private: fs.readFileSync(
-        `${path.join(process.cwd(), "certs")}/private.key`
+        `${path.join(process.cwd(), "certs")}\\private.key`
       ),
       public: fs.readFileSync(
-        `${path.join(process.cwd(), "certs")}/public.key`
+        `${path.join(process.cwd(), "certs")}\\public.key`
       ),
     },
     sign: {
@@ -47,6 +49,14 @@ async function createServer() {
       }
     }
   );
+
+  // routes
+  app.register(userRoutes, {
+    prefix: "api/user",
+  });
+  app.register(vaultRoutes, {
+    prefix: "api/vault",
+  });
 
   return app;
 }
