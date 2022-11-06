@@ -1,11 +1,22 @@
 import React from "react";
+import type { Dispatch, SetStateAction } from "react";
 import FormWrapper from "./FormWrapper";
 import { useForm } from "react-hook-form";
+import { useMutation } from "react-query";
+import { registerUser } from "../api";
+import { generateVaultKey, hashPassword } from "../utils/crypto";
 
-const RegisterForm = () => {
+interface RegisterFormProps {
+  setStep: Dispatch<SetStateAction<"login" | "register" | "vault">>;
+  setVaultKey: Dispatch<SetStateAction<string>>;
+}
+
+const RegisterForm = ({ setVaultKey, setStep }: RegisterFormProps) => {
   const {
     register,
     handleSubmit,
+    getValues,
+    setValue,
     formState: { errors },
   } = useForm<{
     email: string;
@@ -13,8 +24,32 @@ const RegisterForm = () => {
     hashedPassword: string;
   }>();
 
-  const handleFormSubmit = (data: any) => {
-    console.log(data);
+  const mutation = useMutation(registerUser, {
+    onSuccess: ({ salt, vault }) => {
+      const email = getValues("email");
+      const hashedPassword = getValues("hashedPassword");
+
+      const vaultKey = generateVaultKey({
+        email,
+        hashedPassword,
+        salt,
+      });
+
+      window.sessionStorage.setItem("vk", vaultKey);
+      window.sessionStorage.setItem("vault", "");
+      setVaultKey(vaultKey);
+      setStep("vault");
+    },
+  });
+
+  const handleFormSubmit = () => {
+    const email = getValues("email");
+    const password = getValues("password");
+
+    const hashedPassword = hashPassword(password);
+    setValue("hashedPassword", hashedPassword);
+
+    mutation.mutate({ email, hashedPassword });
   };
 
   return (

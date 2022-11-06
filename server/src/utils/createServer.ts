@@ -8,6 +8,12 @@ import cookie from "@fastify/cookie";
 import userRoutes from "../modules/user/user.route";
 import vaultRoutes from "../modules/vault/vault.route";
 
+declare module "fastify" {
+  interface FastifyInstance {
+    authenticate: any;
+  }
+}
+
 async function createServer() {
   const app = fastify();
 
@@ -52,7 +58,7 @@ async function createServer() {
 
   // routes
   app.register(userRoutes, {
-    prefix: "api/user",
+    prefix: "api/users",
   });
   app.register(vaultRoutes, {
     prefix: "api/vault",
