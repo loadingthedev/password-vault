@@ -11,14 +11,14 @@ export async function updateVaultHandler(
   }>,
   reply: FastifyReply
 ) {
-  const userId: string = get(req, "user._id")!;
+  const userId: string = get(req, "user.id")!;
   try {
     await updateVault({
       userId,
       data: req.body.encryptedVault,
     });
 
-    return reply.code(200).send("Vault updated successfully");
+    return reply.code(201).send("Vault updated successfully");
   } catch (err) {
     logger.error(err);
     return reply.code(500).send(err);

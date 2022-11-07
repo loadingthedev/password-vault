@@ -1,5 +1,5 @@
 import { type NextPage } from "next";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Head from "next/head";
 import LoginForm from "../components/LoginForm";
 import RegisterForm from "../components/RegisterForm";
@@ -12,9 +12,22 @@ export interface VaultItem {
 }
 
 const Home: NextPage = () => {
-  const [step, setStep] = useState<"login" | "register" | "vault">("register");
+  const [step, setStep] = useState<"login" | "register" | "vault">("login");
   const [vault, setVault] = useState<VaultItem[]>([]);
   const [vaultKey, setVaultKey] = useState<string>("");
+
+  useEffect(() => {
+    const vault = window.sessionStorage.getItem("vault");
+    const vaultKey = window.sessionStorage.getItem("vk");
+
+    if (vault && vaultKey) {
+      setVault(JSON.parse(vault));
+      setVaultKey(vaultKey);
+      setStep("vault");
+    } else {
+      // setStep("login");
+    }
+  }, []);
 
   return (
     <>
@@ -25,11 +38,17 @@ const Home: NextPage = () => {
       </Head>
 
       <main className="flex h-screen items-center justify-center">
-        {step === "login" && <LoginForm />}
+        {step === "login" && (
+          <LoginForm
+            setStep={setStep}
+            setVaultKey={setVaultKey}
+            setVault={setVault}
+          />
+        )}
         {step === "register" && (
           <RegisterForm setStep={setStep} setVaultKey={setVaultKey} />
         )}
-        {step === "vault" && <Vault />}
+        {step === "vault" && <Vault vault={vault} vaultKey={vaultKey} />}
       </main>
     </>
   );

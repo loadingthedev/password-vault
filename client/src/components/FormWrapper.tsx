@@ -9,7 +9,7 @@ const FormWrapper = ({
   return (
     <form
       {...props}
-      className="flex w-3/5 max-w-xl flex-col gap-4 p-5 shadow-lg"
+      className="flex min-w-[500px] flex-col gap-4 p-5 shadow-lg"
     >
       {children}
     </form>

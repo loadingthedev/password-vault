@@ -7,3 +7,7 @@ export async function createVault(input: { user: string; salt: string }) {
 export async function updateVault(input: { userId: string; data: string }) {
   return VaultModel.updateOne({ user: input.userId }, { data: input.data });
 }
+
+export async function findVaultByUser(userId: string) {
+  return VaultModel.findOne({ user: userId });
+}
